@@ -13,4 +13,13 @@ public enum ProgressEnum {
     public int getValue(){
         return value;
     }
+
+    public static ProgressEnum fromValue(int value) {
+        for (ProgressEnum progressEnum : ProgressEnum.values()) {
+            if (progressEnum.getValue() == value) {
+                return progressEnum;
+            }
+        }
+        throw new IllegalArgumentException("Invalid value: " + value);
+    }
 }

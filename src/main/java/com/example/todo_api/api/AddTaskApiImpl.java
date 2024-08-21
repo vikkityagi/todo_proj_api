@@ -2,14 +2,15 @@ package com.example.todo_api.api;
 
 import java.util.List;
 
-import org.aspectj.apache.bcel.generic.RET;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.example.todo_api.resources.AddTaskResources;
 import com.example.todo_api.service.AddTaskService;
 
+@RestController
 public class AddTaskApiImpl implements AddTaskApi {
 
     @Autowired
@@ -27,6 +28,22 @@ public class AddTaskApiImpl implements AddTaskApi {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<List<AddTaskResources>> list() {
+        // TODO Auto-generated method stub
+        try{
+            List<AddTaskResources> addTaskResources = this.addTaskService.listService();
+            if(addTaskResources.size() > 0){
+                return new ResponseEntity<>(addTaskResources,HttpStatus.OK);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
     
