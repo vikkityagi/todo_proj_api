@@ -25,35 +25,41 @@ public class AddTaskServiceImpl implements AddTaskService {
     private AddTaskRepo addTaskRepo;
 
     @Override
-    public List<AddTaskResources> createService(List<AddTaskResources> addTaskResources) throws Exception{
+    public List<AddTaskResources> createService(List<AddTaskResources> addTaskResources) throws Exception {
+        
         // TODO Auto-generated method stub
         for (AddTaskResources addTaskResources2 : addTaskResources) {
             AddTask addTask = new AddTask();
-            addTask.setTaskId(addTaskResources2.getTask_id());
-            addTask.setProgress(addTaskResources2.getProgress());
-            addTask.setDate(addTaskResources2.getDate());
-            addTask.setTimeStart(addTaskResources2.getStart_time());
-            addTask.setEndTime(addTaskResources2.getEnd_time());
+            if (addTaskResources2.getProgress() == 2) {
+                addTask.setTaskId(addTaskResources2.getTask_id());
+                addTask.setProgress(addTaskResources2.getProgress());
+                addTask.setDate(addTaskResources2.getDate());
+            } else {
+                addTask.setTaskId(addTaskResources2.getTask_id());
+                addTask.setProgress(addTaskResources2.getProgress());
+                addTask.setDate(addTaskResources2.getDate());
+                addTask.setTimeStart(addTaskResources2.getStart_time());
+                addTask.setEndTime(addTaskResources2.getEnd_time());
 
-            // Parse time strings into LocalTime objects
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-            LocalTime time1 = LocalTime.parse(addTaskResources2.getStart_time() + "", formatter);
-            LocalTime time2 = LocalTime.parse(addTaskResources2.getEnd_time() + "", formatter);
+                // Parse time strings into LocalTime objects
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+                LocalTime time1 = LocalTime.parse(addTaskResources2.getStart_time() + "", formatter);
+                LocalTime time2 = LocalTime.parse(addTaskResources2.getEnd_time() + "", formatter);
 
-            // Calculate the difference
-            Duration duration = Duration.between(time1, time2);
+                // Calculate the difference
+                Duration duration = Duration.between(time1, time2);
 
-            // Get the difference in minutes
-            long minutes = duration.toMinutes();
+                // Get the difference in minutes
+                long minutes = duration.toMinutes();
 
-            // Convert minutes to hours and minutes
-            long hours = minutes / 60;
-            long remainingMinutes = minutes % 60;
+                // Convert minutes to hours and minutes
+                long hours = minutes / 60;
+                long remainingMinutes = minutes % 60;
 
-            addTask.setTotalTime(hours+"H:"+remainingMinutes+"M");
+                addTask.setTotalTime(hours + "H:" + remainingMinutes + "M");
+            }
+
             this.addTaskRepo.save(addTask);
-
-
 
         }
         return addTaskResources;
@@ -63,21 +69,20 @@ public class AddTaskServiceImpl implements AddTaskService {
     public List<AddTaskResources> listService() throws Exception {
         // TODO Auto-generated method stub
         List<AddTaskResources> addTaskResources = new ArrayList<>();
-        for(AddTask addTask: this.addTaskRepo.findAll()){
+        for (AddTask addTask : this.addTaskRepo.findAllDataByDate()) {
             AddTaskResources addTaskResourcesObj = new AddTaskResources();
             addTaskResourcesObj.setId(addTask.getId());
-            addTaskResourcesObj.setTaskName(TaskEnum.fromValue(addTask.getTaskId())+"");
-            addTaskResourcesObj.setProgressName(ProgressEnum.fromValue(addTask.getProgress())+"");
+            addTaskResourcesObj.setTaskName(TaskEnum.fromValue(addTask.getTaskId()) + "");
+            addTaskResourcesObj.setProgressName(ProgressEnum.fromValue(addTask.getProgress()) + "");
 
             addTaskResourcesObj.setDate(addTask.getDate());
             addTaskResourcesObj.setTotalTime(addTask.getTotalTime());
-
 
             addTaskResources.add(addTaskResourcesObj);
         }
 
         return addTaskResources;
-        
+
     }
 
 }
