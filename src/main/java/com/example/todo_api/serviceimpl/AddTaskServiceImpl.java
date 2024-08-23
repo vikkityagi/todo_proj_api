@@ -26,7 +26,7 @@ public class AddTaskServiceImpl implements AddTaskService {
 
     @Override
     public List<AddTaskResources> createService(List<AddTaskResources> addTaskResources) throws Exception {
-        
+
         // TODO Auto-generated method stub
         for (AddTaskResources addTaskResources2 : addTaskResources) {
             AddTask addTask = new AddTask();
@@ -56,7 +56,13 @@ public class AddTaskServiceImpl implements AddTaskService {
                 long hours = minutes / 60;
                 long remainingMinutes = minutes % 60;
 
-                addTask.setTotalTime(hours + "H:" + remainingMinutes + "M");
+                // Format hours to ensure it's always two digits
+                String formattedHours = String.format("%02d", hours);
+
+                // Format remaining minutes to ensure it's always two digits
+                String formattedMinutes = String.format("%02d", remainingMinutes);
+
+                addTask.setTotalTime(formattedHours + ":" + formattedMinutes);
             }
 
             this.addTaskRepo.save(addTask);
@@ -74,7 +80,8 @@ public class AddTaskServiceImpl implements AddTaskService {
             addTaskResourcesObj.setId(addTask.getId());
             addTaskResourcesObj.setTaskName(TaskEnum.fromValue(addTask.getTaskId()) + "");
             addTaskResourcesObj.setProgressName(ProgressEnum.fromValue(addTask.getProgress()) + "");
-
+            addTaskResourcesObj.setStart_time(addTask.getTimeStart());
+            addTaskResourcesObj.setEnd_time(addTask.getEndTime());
             addTaskResourcesObj.setDate(addTask.getDate());
             addTaskResourcesObj.setTotalTime(addTask.getTotalTime());
 
